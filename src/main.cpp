@@ -1,51 +1,68 @@
 #include <Arduino.h>
 #include <TTN_esp32.h>
-
+ 
 #include "TTN_CayenneLPP.h"
-/***************************************************************************
- *  Go to your TTN console register a device then the copy fields
- *  and replace the CHANGE_ME strings below
- * 
- *  REMOVE : .pio/libdepds/ttgo-lora-v32v1/TTTN_esp32/src/BLE*****
- * 
- * 
- * 
- ****************************************************************************/
-const char* devEui = "70B3D57ED0053832"; // Change to TTN Device EUI
+
+/*****************************************
+* 
+* CHANGER LES VALEURS SUIVANTE selon le configuration !!!!
+* 
+/*****************************************/
+
+// identifiant du node TTN
+const char* devEui = "70B3D57ED0054974"; // Change to TTN Device EUI
 const char* appEui = "0000000000000000"; // Change to TTN Application EUI
-const char* appKey = "FD6E0F1EC93C8FA12B23C1E5A1DE9C80"; // Chaneg to TTN Application Key
+const char* appKey = "ED52F1573C19890A23FE023A273A7D3B"; // Chaneg to TTN Application Key
 
-// ADJUST TIME BETWEEN SEND
-const unsigned long secs_between_send = 60*60;
-
+// selection station meteo (2) ou vitibox (1)
 #define VITI_TYPE 1 //si vitbox : 1 --> sonde DS18B20 sinon 2 --> sonde DHT22
+
+// Temps entre les mesures (en secondes)
+const unsigned long secs_between_send = 60*30;
+
+// Coefficient de la batterie (en fonction des valeurs des resistances, mesure sur le terrain)
+const double batt_coeff = 0.001074481;
+ 
+/*****************************************
+* 
+* FIN des valeurs à modifier !
+* 
+/*****************************************/
+
 
 
 TTN_esp32 ttn ;
 TTN_CayenneLPP lpp;
 const uint8_t fport = 10;
-
+ 
 /******
- * 
- *  SENSOR DECLARATION
- * 
+*
+*  SENSOR DECLARATION
+*
  ******/
 #include <Adafruit_Sensor.h>
 #include <Adafruit_I2CDevice.h>
-
+ 
+#define BATPIN 36
+float batt_level = 0;
+ 
 
 #if VITI_TYPE == 1
     #include <OneWire.h>
     #include <DallasTemperature.h>
-    #define ONE_WIRE_BUS 16
+    #define ONE_WIRE_BUS 17
     OneWire oneWire(ONE_WIRE_BUS);
     DallasTemperature sensors(&oneWire);
     DeviceAddress deviceAddress;
     float temp_sonde = 0;
 
-    const uint8_t payloadBufferLength = 3;
-
-
+    //Display
+    #include <U8g2lib.h>
+    #include <Wire.h>
+    U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, /*rst*/ 16, /*scl*/ 22, /*sda*/ 21);///* reset=*/ U8X8_PIN_NONE, /* clock=*/ 16, /* data=*/ 17);
+ 
+    const uint8_t payloadBufferLength = 5;
+ 
 #elif VITI_TYPE == 2
     #include <DHT.h>
     #define DHTPIN 4
@@ -53,11 +70,11 @@ const uint8_t fport = 10;
     DHT dht(DHTPIN, DHTTYPE);
     float humidity = 0;
     float temperature = 0;
-
-    const uint8_t payloadBufferLength = 5;
+ 
+    const uint8_t payloadBufferLength = 7;
 #endif
-
-
+ 
+ 
 /* Payload buffer is bytes send to ttn and manage by ttn payload formater.
 *
 * For vitibox : [1, int(sonde), sonde/100]
@@ -65,9 +82,7 @@ const uint8_t fport = 10;
 * For vititeo : [2, int(hum), int(hum/100), int(temp), int(temp/100) ]
 */
 uint8_t payloadBuffer[payloadBufferLength];
-
-
-
+ 
 void message(const uint8_t* payload, size_t size, int rssi)
 {
     Serial.println("-- MESSAGE");
@@ -77,9 +92,9 @@ void message(const uint8_t* payload, size_t size, int rssi)
         Serial.print(" " + String(payload[i]));
         // Serial.write(payload[i]);
     }
-
     Serial.println();
 }
+
 
 void print_wakeup_reason()
 {
@@ -107,16 +122,19 @@ void print_wakeup_reason()
         break;
     }
 }
-
+ 
 void waitForTransactions()
 {
     Serial.println("Waiting for pending transactions... ");
     Serial.println("Waiting took " + String(ttn.waitForPendingTransactions()) + "ms");
 }
-
+ 
 void getSensors()
 {
-    #if VITI_TYPE == 1
+    batt_level = analogRead(BATPIN) * batt_coeff;
+  
+ 
+   #if VITI_TYPE == 1
         sensors.requestTemperatures();
         temp_sonde = sensors.getTempCByIndex(0);
     #elif VITI_TYPE == 2
@@ -125,48 +143,54 @@ void getSensors()
         temperature = dht.readTemperature();
     #endif
 }
-
-
+ 
+ 
 void sendData()
 {
 /***************************************************************************
- *  HERE GO THE DATA TO SEND !
- * 
- * 
+*  HERE GO THE DATA TO SEND !
  ****************************************************************************/
-    /*
-    const float temperature = temperatureRead();
-    lpp.reset();
-    lpp.addTemperature(1, temperature);
-    if (ttn.sendBytes(lpp.getBuffer(), lpp.getSize()))
-    {
-        Serial.printf("Temp: %f TTN_CayenneLPP: %d %x %02X%02X\n", temperature, lpp.getBuffer()[0], lpp.getBuffer()[1],
-            lpp.getBuffer()[2], lpp.getBuffer()[3]);
-    }
-    */
-  
+ 
+ 
   #if VITI_TYPE == 1
     payloadBuffer[0] = byte(1);
-    uint32_t s = temp_sonde * 100;
+//    uint32_t s = temp_sonde * 100;
     payloadBuffer[1] = int(temp_sonde);
     payloadBuffer[2] = int(int(temp_sonde * 100) % 100);
+    payloadBuffer[3] = int(batt_level);
+    payloadBuffer[4] = int(int(batt_level * 100) % 100);
     Serial.print("sonde :  ");Serial.println(temp_sonde);
+    // display
+    u8g2.clearBuffer();
+    // sonde
+    String to_display = String(temp_sonde)+" C";
+    u8g2.setFont(u8g2_font_ncenB24_tr);
+    u8g2.drawStr(5,48,to_display.c_str());
+    // batt
+    String batt_display = String(batt_level)+" V";
+    u8g2.setFont(u8g2_font_ncenB10_tr);
+    u8g2.drawStr(60,64,batt_display.c_str());
+ 
+    u8g2.sendBuffer();
+ 
   #elif VITI_TYPE == 2
     payloadBuffer[0] =  byte(2);
-
+ 
     uint32_t h = humidity * 100;
     payloadBuffer[1] = int(humidity);
     payloadBuffer[2] = int(int(humidity * 100) % 100);
-
+ 
     uint32_t t = temperature * 100;
     payloadBuffer[3] = int(temperature);
     payloadBuffer[4] = int(int(temperature * 100) % 100);
-
-    
+ 
+    payloadBuffer[5] = int(batt_level);
+    payloadBuffer[6] = int(int(batt_level * 100) % 100);
+   
     Serial.print("humidity : ");Serial.println(humidity);
     Serial.print("temp :  ");Serial.println(temperature);
   #endif
-
+ 
   Serial.println("SEND TO TTN : ");
   for (int i = 0; i < sizeof(payloadBuffer); i++) {
     Serial.println(payloadBuffer[i]);
@@ -174,24 +198,32 @@ void sendData()
   Serial.println(payloadBufferLength);
   ttn.sendBytes(payloadBuffer, payloadBufferLength, fport);
 }
+ 
+
 
 void setup()
 {
     Serial.begin(115200);
     delay(1000);
     Serial.println("Starting");
-
+ 
     #if VITI_TYPE == 1
         sensors.begin();
+       
+        Wire.begin(21, 22);
+        u8g2.begin();
+        u8g2.clearBuffer();
+        u8g2.setFont(u8g2_font_ncenB10_tr);
+        u8g2.drawStr(5,16,"Starting ...");
+        u8g2.sendBuffer();
+//        u8g2.drawStr(5,32,"Not Connected yet");
     #elif VITI_TYPE == 2
         dht.begin();
     #endif
-    
-    
-
+ 
     // Print the wakeup reason for ESP32
     print_wakeup_reason();
-
+ 
     ttn.begin();
     // Declare callback function for handling downlink messages from server
     ttn.onMessage(message);
@@ -204,7 +236,7 @@ void setup()
         delay(500);
     }
     Serial.println("\njoined!");
-
+ 
     // Make sure any pending transactions are handled first
     waitForTransactions();
     //
@@ -213,15 +245,17 @@ void setup()
     sendData();
     // Make sure our transactions is handled before going to sleep
     waitForTransactions();
-
+ 
     // Sleep time in micro seconds so multiply by 1000000
     esp_sleep_enable_timer_wakeup(secs_between_send * 1000000);
-
+ 
     // Go to sleep now
     Serial.println("Going to sleep!");
     esp_deep_sleep_start();
     // Everything beyond this point will never be called
 }
+
+
 
 void loop()
 {
