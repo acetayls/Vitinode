@@ -96,6 +96,11 @@ void print_wakeup_reason()
     }
 }
  
+// stores the data on the RTC memory so that it will not be deleted during the deep sleep
+RTC_DATA_ATTR int bootCount = 0; 
+RTC_DATA_ATTR int pckCounter = 0;   // sending packet number...
+
+
 void waitForTransactions()
 {
     Serial.println("Waiting for pending transactions... ");
@@ -195,8 +200,9 @@ void setup()
     #endif
  
     // Print the wakeup reason for ESP32
-    print_wakeup_reason();
+    //print_wakeup_reason();
  
+    
     ttn.begin();
     // Declare callback function for handling downlink messages from server
     ttn.onMessage(message);
@@ -219,6 +225,7 @@ void setup()
     // Make sure our transactions is handled before going to sleep
     waitForTransactions();
  
+    
     // Sleep time in micro seconds so multiply by 1000000
     esp_sleep_enable_timer_wakeup(secs_between_send * 1000000);
  

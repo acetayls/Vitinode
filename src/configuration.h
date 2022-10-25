@@ -13,10 +13,10 @@ const char* appKey = "ED52F1573C19890A23FE023A273A7D3B"; // Chaneg to TTN Applic
 #define VITI_TYPE 1 //si vitbox : 1 --> sonde DS18B20 sinon 2 --> sonde DHT22
 
 // Temps entre les mesures (en secondes)
-const unsigned long secs_between_send = 60*30;
+const unsigned long secs_between_send = 60*60;
 
 // Coefficient de la batterie (en fonction des valeurs des resistances, mesure sur le terrain)
-const double batt_coeff = 0.001074481;
+const double batt_coeff = 0.001074481; // (3.3V * R1/(R1+R2) / 4095 ) // si les resistance sont identiques : 0,001611721612
  
 /*****************************************
 * 
