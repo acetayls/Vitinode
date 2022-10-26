@@ -38,7 +38,7 @@ float batt_level = 0;
  
 #elif VITI_TYPE == 2
     #include <DHT.h>
-    #define DHTPIN 4
+    #define DHTPIN 16
     #define DHTTYPE DHT22
     DHT dht(DHTPIN, DHTTYPE);
     float humidity = 0;
