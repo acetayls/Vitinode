@@ -3,6 +3,17 @@ https://github.com/acetayls/Vitinode
 
 Code pour la programmation de station météo développé par vitipole, chambre d'agriculture de Sâone et loire
 
+Trajet du signal :
+
+
+Station météo (end device) -----LoRA--------> GATEWAY -----Wifi-----> Internet | TheThingsNework | iot.protechebdo.fr
+Station météo (end device) -----LoRA-------|                                   |
+Station météo (end device) -----LoRA-------|                                   |
+                                                                               |
+Station météo (end device) -----LoRA-------|> GATEWAY -----Wifi-----> Internet | 
+Station météo (end device) -----LoRA-------|
+
+
 
 ## Pour commencer : 
 Installer vscode 
@@ -25,7 +36,7 @@ Télecharger le dossier
     cable micro-usb : Pour la programmation et la charge de la batterie
 
 ### Cablage
-    DHTpin : 4
+    DHTpin : 16
     DHT+ : +3.3V
     DHT- : Masse
 ####
@@ -38,7 +49,10 @@ Créer un compte sur https://www.thethingsnetwork.org/
 - Individual
 - Europe1
     
-Rejoindre l'oganisation : vitilab-chambragri
+Rejoindre l'oganisation : 
+
+    + add organiization
+    vitilab-chambragri
 
 
 
@@ -46,6 +60,7 @@ Rejoindre l'oganisation : vitilab-chambragri
 suivre : https://www.thethingsindustries.com/docs/gateways/models/thethingsindoorgateway/
 
 Attention : le gateway EUI correspond à XXXXXX-FFFE-XXXXXX (les caractéère FFFE ne sont pas affiché sur la gateway ... )
+Le claim authentification code est celui qui correspond au wifi (derriere apres Wifi PW : )
 Frequency plan : Europe 863-870 MHz (SF9 for RX2  - recommended)
 
 
@@ -145,11 +160,14 @@ Ce fichier doit avoir la forme :
 ## test de compilation :
 Cliquer sur build (dans VS code, symbole valider dans la barre du bas)
 
-    si besoin, supprimer le fichier : .pio/libdepds/ttgo-lora-v32v1/TTTN_esp32/src/BLE*****
+    si besoin, supprimer le fichier : .pio/libdepds/ttgo-lora-v32v1/TTTN_esp32/src/TTN_BLE_ESP32.cpp
+                                      .pio/libdepds/ttgo-lora-v32v1/TTTN_esp32/src/TTN_BLE_ESP32.h
 
 La réussite du build permet d'être sur que le programme s'execute correctement
 
 ## upload - programmation de l'esp32
+
+Cliquer sur la flêche - upload (barre du bas)
 
 # Sur Macos
 Si on a une erreur comme :
@@ -184,3 +202,13 @@ apres :
 ajouter une ligne du type (à modifier en fonction du nom du port, on peut le trouver dans l'onglet PIO Home / Devices)
 
     upload_port = /dev/cu.wchusbserial146241
+
+
+## TEST DE PORTEE
+### Allumer la gateway et le node
+    tester proche de la gateway avec un smartphone sur https://iot.protechebdo.fr qu'on recoit bien une donnée
+### S'éloigner et régulierement tester que le lien fonctionne encore
+    Appuyer sur le boutton reset de la station
+    actualiser la page https://iot.protechebdo.fr (ça peux prendre 1 minute avant de recevoir une donnée à jour)
+
+
