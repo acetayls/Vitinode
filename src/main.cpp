@@ -66,12 +66,13 @@ float batt_level = 0;
 
 #elif VITI_TYPE == 5
     int pulse = 0; // Variable for saving pulses count.
-    int var = 0;
     float kwh=0;
+    const unsigned long time_between_send = 10*1000; // temps entre les envois / mesure kwh
+    float ratio_kwh = 0.00125; // kwh = pulse*ratio_kwh, à adapter selon time_betwwen_send
     
     const int input = 16;
      
-    const unsigned long time_between_send = 10*1000; //milliseconds
+    
 
     const unsigned last_send = 0; //milliseconds
     const uint8_t payloadBufferLength = 5;
@@ -159,14 +160,11 @@ void getSensors()
         ratio = 100 - (distance*100)/400;
     #elif VITI_TYPE == 5
         Serial.println(F("No pulses yet..."));
-        if(digitalRead(input) > var)
+        if(digitalRead(input))
             {
-            var = 1;
             pulse++;
-            kwh = pulse*0.00125;
+            kwh = pulse*ratio_kwh;
             }
-        if(digitalRead(input) == 0) {var = 0;}
-
         delay(1); // Delay for stability.
 
     #endif
@@ -253,7 +251,6 @@ void sendData()
   #elif VITI_TYPE == 5
     payloadBuffer[0] =  byte(5);
 
-    uint32_t wh = kwh * 100;
     payloadBuffer[1] = int(kwh);
     payloadBuffer[2] = int(int(kwh * 100) % 100);
  
@@ -338,24 +335,17 @@ void setup()
 void loop()
 {
     #if VITI_TYPE == 5
-        Serial.println(F("No pulses yet..."));
-        if(digitalRead(input) > var)
-            {
-            var = 1;
-            pulse++;
-            kwh = pulse*0.00125;
-            }
-        if(digitalRead(input) == 0) {var = 0;}
+        // on regarde en permanence si on à une impulsion.
+        getSensors();
 
-        delay(1); // Delay for stability.
-
+        // tout les time_between_send Milliseconds, on envoi à TTN (et on remet à zero de compteur d'impulsion)
         if ((millis() - last_send) > time_between_send) {
-            //
-            getSensors();
             // Send our data
             sendData();
             // Make sure our transactions is handled before going to sleep
             waitForTransactions();
+            // Remise à Zéro du compteur d'impulsion
+            pulse = 0;
         }
     #endif
     // for other, go to deep sleep --> Never called
