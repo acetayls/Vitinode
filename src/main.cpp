@@ -36,15 +36,46 @@ float batt_level = 0;
  
     const uint8_t payloadBufferLength = 5;
  
-#elif VITI_TYPE == 2
+#elif VITI_TYPE == 2 || VITI_TYPE == 3
     #include <DHT.h>
     #define DHTPIN 16
     #define DHTTYPE DHT22
     DHT dht(DHTPIN, DHTTYPE);
     float humidity = 0;
     float temperature = 0;
- 
     const uint8_t payloadBufferLength = 7;
+
+#elif  VITI_TYPE == 3
+    #include <DHT.h>
+    #define DHTPIN 16
+    #define DHTTYPE DHT22
+    DHT dht(DHTPIN, DHTTYPE);
+    float humidity = 0;
+    float temperature = 0;
+    // avec pluvio et capacitif
+    const uint8_t payloadBufferLength = 11;
+
+
+#elif VITI_TYPE == 4
+    #include <Ultrasonic.h>
+    Ultrasonic ultrasonic(16, 17);
+    float distance = 0 ;
+    float ratio = 0 ;
+     
+    const uint8_t payloadBufferLength = 7;
+
+#elif VITI_TYPE == 5
+    int pulse = 0; // Variable for saving pulses count.
+    int var = 0;
+    float kwh=0;
+    
+    const int input = 16;
+     
+    const unsigned long time_between_send = 10*1000; //milliseconds
+
+    const unsigned last_send = 0; //milliseconds
+    const uint8_t payloadBufferLength = 5;
+
 #endif
  
  
@@ -112,13 +143,32 @@ void getSensors()
     batt_level = analogRead(BATPIN) * batt_coeff;
   
  
-   #if VITI_TYPE == 1
+    #if VITI_TYPE == 1
         sensors.requestTemperatures();
         temp_sonde = sensors.getTempCByIndex(0);
     #elif VITI_TYPE == 2
         humidity = dht.readHumidity();
         // Read temperature as Celsius (the default)
         temperature = dht.readTemperature();
+    #elif VITI_TYPE == 3
+        humidity = dht.readHumidity();
+        // Read temperature as Celsius (the default)
+        temperature = dht.readTemperature();
+    #elif VITI_TYPE == 4
+        distance = ultrasonic.read();
+        ratio = 100 - (distance*100)/400;
+    #elif VITI_TYPE == 5
+        Serial.println(F("No pulses yet..."));
+        if(digitalRead(input) > var)
+            {
+            var = 1;
+            pulse++;
+            kwh = pulse*0.00125;
+            }
+        if(digitalRead(input) == 0) {var = 0;}
+
+        delay(1); // Delay for stability.
+
     #endif
 }
  
@@ -151,7 +201,7 @@ void sendData()
  
     u8g2.sendBuffer();
  
-  #elif VITI_TYPE == 2
+  #elif VITI_TYPE == 2 
     payloadBuffer[0] =  byte(2);
  
     uint32_t h = humidity * 100;
@@ -167,6 +217,51 @@ void sendData()
    
     Serial.print("humidity : ");Serial.println(humidity);
     Serial.print("temp :  ");Serial.println(temperature);
+  #elif VITI_TYPE == 3
+    payloadBuffer[0] =  byte(3);
+ 
+    uint32_t h = humidity * 100;
+    payloadBuffer[1] = int(humidity);
+    payloadBuffer[2] = int(int(humidity * 100) % 100);
+ 
+    uint32_t t = temperature * 100;
+    payloadBuffer[3] = int(temperature);
+    payloadBuffer[4] = int(int(temperature * 100) % 100);
+ 
+    payloadBuffer[5] = int(batt_level);
+    payloadBuffer[6] = int(int(batt_level * 100) % 100);
+   
+    Serial.print("humidity : ");Serial.println(humidity);
+    Serial.print("temp :  ");Serial.println(temperature);
+
+  #elif VITI_TYPE == 4
+    payloadBuffer[0] =  byte(4);
+
+    uint32_t d = distance * 100;
+    payloadBuffer[1] = int(distance);
+    payloadBuffer[2] = int(int(distance * 100) % 100);
+
+    payloadBuffer[3] = int(ratio);
+    payloadBuffer[4] = int(int(ratio * 100) % 100);
+ 
+    payloadBuffer[5] = int(batt_level);
+    payloadBuffer[6] = int(int(batt_level * 100) % 100);
+   
+    Serial.print("Distance in CM: "); Serial.println(distance); 
+    Serial.print("Remplissage en % : "); Serial.println(ratio); 
+    
+  #elif VITI_TYPE == 5
+    payloadBuffer[0] =  byte(5);
+
+    uint32_t wh = kwh * 100;
+    payloadBuffer[1] = int(kwh);
+    payloadBuffer[2] = int(int(kwh * 100) % 100);
+ 
+    payloadBuffer[3] = int(batt_level);
+    payloadBuffer[4] = int(int(batt_level * 100) % 100);
+   
+    Serial.print(pulse);Serial.println(" pulse = ");
+    Serial.print(kwh);Serial.println(" kWh \n");
   #endif
  
   Serial.println("SEND TO TTN : ");
@@ -195,49 +290,73 @@ void setup()
         u8g2.drawStr(5,16,"Starting ...");
         u8g2.sendBuffer();
 //        u8g2.drawStr(5,32,"Not Connected yet");
-    #elif VITI_TYPE == 2
+    #elif VITI_TYPE == 2 || VITI_TYPE == 3
         dht.begin();
     #endif
  
+
+
     // Print the wakeup reason for ESP32
     //print_wakeup_reason();
  
+    #if VITI_TYPE != 5 // Les autres que 5 utilisent le deep sleep, pour 5, voir dans loop()
+        ttn.begin();
+        // Declare callback function for handling downlink messages from server
+        ttn.onMessage(message);
+        // Join the network
+        ttn.join(devEui, appEui, appKey);
+        Serial.print("Joining TTN ");
+        while (!ttn.isJoined())
+        {
+            Serial.print(".");
+            delay(500);
+        }
+        Serial.println("\njoined!");
     
-    ttn.begin();
-    // Declare callback function for handling downlink messages from server
-    ttn.onMessage(message);
-    // Join the network
-    ttn.join(devEui, appEui, appKey);
-    Serial.print("Joining TTN ");
-    while (!ttn.isJoined())
-    {
-        Serial.print(".");
-        delay(500);
-    }
-    Serial.println("\njoined!");
- 
-    // Make sure any pending transactions are handled first
-    waitForTransactions();
-    //
-    getSensors();
-    // Send our data
-    sendData();
-    // Make sure our transactions is handled before going to sleep
-    waitForTransactions();
- 
+        // Make sure any pending transactions are handled first
+        waitForTransactions();
+        //
+        getSensors();
+        // Send our data
+        sendData();
+        // Make sure our transactions is handled before going to sleep
+        waitForTransactions();
     
-    // Sleep time in micro seconds so multiply by 1000000
-    esp_sleep_enable_timer_wakeup(secs_between_send * 1000000);
- 
-    // Go to sleep now
-    Serial.println("Going to sleep!");
-    esp_deep_sleep_start();
-    // Everything beyond this point will never be called
+        
+        // Sleep time in micro seconds so multiply by 1000000
+        esp_sleep_enable_timer_wakeup(secs_between_send * 1000000);
+    
+        // Go to sleep now
+        Serial.println("Going to sleep!");
+        esp_deep_sleep_start();
+        // Everything beyond this point will never be called
+    #endif
 }
 
 
 
 void loop()
 {
-    // Never called
+    #if VITI_TYPE == 5
+        Serial.println(F("No pulses yet..."));
+        if(digitalRead(input) > var)
+            {
+            var = 1;
+            pulse++;
+            kwh = pulse*0.00125;
+            }
+        if(digitalRead(input) == 0) {var = 0;}
+
+        delay(1); // Delay for stability.
+
+        if ((millis() - last_send) > time_between_send) {
+            //
+            getSensors();
+            // Send our data
+            sendData();
+            // Make sure our transactions is handled before going to sleep
+            waitForTransactions();
+        }
+    #endif
+    // for other, go to deep sleep --> Never called
 }
