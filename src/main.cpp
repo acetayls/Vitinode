@@ -72,9 +72,7 @@ float batt_level = 0;
     
     const int input = 16;
      
-    
-
-    const unsigned last_send = 0; //milliseconds
+    unsigned long last_send = 0; //milliseconds
     const uint8_t payloadBufferLength = 5;
 
 #endif
@@ -346,6 +344,8 @@ void loop()
             waitForTransactions();
             // Remise à Zéro du compteur d'impulsion
             pulse = 0;
+
+            last_send = millis();
         }
     #endif
     // for other, go to deep sleep --> Never called
