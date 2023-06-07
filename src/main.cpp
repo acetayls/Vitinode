@@ -288,6 +288,8 @@ void setup()
 //        u8g2.drawStr(5,32,"Not Connected yet");
     #elif VITI_TYPE == 2 || VITI_TYPE == 3
         dht.begin();
+    #elif VITI_TYPE == 5
+        pinMode(input, INPUT_PULLDOWN);
     #endif
  
 
