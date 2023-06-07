@@ -163,6 +163,7 @@ void getSensors()
             pulse++;
             kwh = pulse*ratio_kwh;
             Serial.print("pulse :");Serial.println(pulse);
+            delay(500);
             }
         delay(1); // Delay for stability.
 
