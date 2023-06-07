@@ -157,11 +157,12 @@ void getSensors()
         distance = ultrasonic.read();
         ratio = 100 - (distance*100)/400;
     #elif VITI_TYPE == 5
-        Serial.println(F("No pulses yet..."));
+        //Serial.println(F("No pulses yet..."));
         if(digitalRead(input))
             {
             pulse++;
             kwh = pulse*ratio_kwh;
+            Serial.print("pulse :");Serial.println(pulse);
             }
         delay(1); // Delay for stability.
 
