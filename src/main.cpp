@@ -157,7 +157,7 @@ void getSensors()
         distance = ultrasonic.read();
         ratio = 100 - (distance*100)/400;
     #elif VITI_TYPE == 5
-    
+
         //Serial.println(F("No pulses yet..."));
         if(!digitalRead(input))
             {
@@ -265,7 +265,7 @@ void sendData()
   Serial.println("SEND TO TTN : ");
   for (int i = 0; i < sizeof(payloadBuffer); i++) {
     Serial.println(payloadBuffer[i]);
-}
+  }
   Serial.println(payloadBufferLength);
   ttn.sendBytes(payloadBuffer, payloadBufferLength, fport);
 }
@@ -298,21 +298,21 @@ void setup()
 
     // Print the wakeup reason for ESP32
     //print_wakeup_reason();
- 
+    ttn.begin();
+    // Declare callback function for handling downlink messages from server
+    ttn.onMessage(message);
+    // Join the network
+    ttn.join(devEui, appEui, appKey);
+    Serial.print("Joining TTN ");
+    while (!ttn.isJoined())
+    {
+        Serial.print(".");
+        delay(500);
+    }
+    Serial.println("\njoined!");
+
+        
     #if VITI_TYPE != 5 // Les autres que 5 utilisent le deep sleep, pour 5, voir dans loop()
-        ttn.begin();
-        // Declare callback function for handling downlink messages from server
-        ttn.onMessage(message);
-        // Join the network
-        ttn.join(devEui, appEui, appKey);
-        Serial.print("Joining TTN ");
-        while (!ttn.isJoined())
-        {
-            Serial.print(".");
-            delay(500);
-        }
-        Serial.println("\njoined!");
-    
         // Make sure any pending transactions are handled first
         waitForTransactions();
         //
