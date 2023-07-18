@@ -18,6 +18,9 @@ const uint8_t fport = 10;
  
 #define BATPIN 36
 float batt_level = 0;
+float batt_pourcent=0;
+float tension_min=3.2; //V 
+//float tension_max=4.2; //V 
  
 
 #if VITI_TYPE == 1
@@ -140,7 +143,12 @@ void waitForTransactions()
 void getSensors()
 {
     batt_level = analogRead(BATPIN) * batt_coeff;
-  
+    batt_pourcent = ((batt_level - tension_min)*100);
+    if (batt_pourcent>100){
+        batt_pourcent=100;
+    } else if (batt_pourcent<0){
+        batt_pourcent=0;
+    } else{}
  
     #if VITI_TYPE == 1
         sensors.requestTemperatures();
@@ -184,8 +192,8 @@ void sendData()
 //    uint32_t s = temp_sonde * 100;
     payloadBuffer[1] = int(temp_sonde);
     payloadBuffer[2] = int(int(temp_sonde * 100) % 100);
-    payloadBuffer[3] = int(batt_level);
-    payloadBuffer[4] = int(int(batt_level * 100) % 100);
+    payloadBuffer[3] = int(batt_pourcent);
+    payloadBuffer[4] = int(int(batt_pourcent * 100) % 100);
     Serial.print("sonde :  ");Serial.println(temp_sonde);
     // display
     u8g2.clearBuffer();
@@ -211,8 +219,8 @@ void sendData()
     payloadBuffer[3] = int(temperature);
     payloadBuffer[4] = int(int(temperature * 100) % 100);
  
-    payloadBuffer[5] = int(batt_level);
-    payloadBuffer[6] = int(int(batt_level * 100) % 100);
+    payloadBuffer[5] = int(batt_pourcent);
+    payloadBuffer[6] = int(int(batt_pourcent * 100) % 100);
    
     Serial.print("humidity : ");Serial.println(humidity);
     Serial.print("temp :  ");Serial.println(temperature);
@@ -227,8 +235,8 @@ void sendData()
     payloadBuffer[3] = int(temperature);
     payloadBuffer[4] = int(int(temperature * 100) % 100);
  
-    payloadBuffer[5] = int(batt_level);
-    payloadBuffer[6] = int(int(batt_level * 100) % 100);
+    payloadBuffer[5] = int(batt_pourcent);
+    payloadBuffer[6] = int(int(batt_pourcent * 100) % 100);
    
     Serial.print("humidity : ");Serial.println(humidity);
     Serial.print("temp :  ");Serial.println(temperature);
@@ -243,8 +251,8 @@ void sendData()
     payloadBuffer[3] = int(ratio);
     payloadBuffer[4] = int(int(ratio * 100) % 100);
  
-    payloadBuffer[5] = int(batt_level);
-    payloadBuffer[6] = int(int(batt_level * 100) % 100);
+    payloadBuffer[5] = int(batt_pourcent);
+    payloadBuffer[6] = int(int(batt_pourcent * 100) % 100);
    
     Serial.print("Distance in CM: "); Serial.println(distance); 
     Serial.print("Remplissage en % : "); Serial.println(ratio); 
@@ -255,8 +263,8 @@ void sendData()
     payloadBuffer[1] = int(kwh);
     payloadBuffer[2] = int(int(kwh * 100) % 100);
  
-    payloadBuffer[3] = int(batt_level);
-    payloadBuffer[4] = int(int(batt_level * 100) % 100);
+    payloadBuffer[3] = int(batt_pourcent);
+    payloadBuffer[4] = int(int(batt_pourcent * 100) % 100);
    
     Serial.print(pulse);Serial.println(" pulse = ");
     Serial.print(kwh);Serial.println(" kWh \n");
