@@ -1,19 +1,11 @@
 # Vitinode
 https://github.com/acetayls/Vitinode
 
-Code pour la programmation de station météo développé par vitipole, chambre d'agriculture de Sâone et loire
+Code pour la programmation de station météo et autres capteurs connectés développés par vinipole, chambre d'agriculture de Sâone et loire
+Voir fiche vitinode pour explications complémentaires
 
 Trajet du signal :
-
-
 Station météo (end device) -----LoRA--------> GATEWAY -----Wifi-----> Internet | TheThingsNework | iot.protechebdo.fr
-Station météo (end device) -----LoRA-------|                                   |
-Station météo (end device) -----LoRA-------|                                   |
-                                                                               |
-Station météo (end device) -----LoRA-------|> GATEWAY -----Wifi-----> Internet | 
-Station météo (end device) -----LoRA-------|
-
-
 
 ## Pour commencer : 
 Installer vscode 
@@ -26,11 +18,10 @@ Installer platformio
 Télecharger le dossier 
     https://github.com/acetayls/Vitinode/archive/refs/heads/main.zip
 
-
 ## Hardware :
     ESP32 avec LoRA: ttgo - lora v1
     DHT22 : Capteur de temperature
-    2 resistances de 3.3 kOhms (niveau de batterie)
+    2 resistances de 3.3 kOhms (2 résistances identiques)(niveau de batterie)
     Boitier sur mesure du vitipole
 
     cable micro-usb : Pour la programmation et la charge de la batterie
@@ -54,8 +45,6 @@ Rejoindre l'oganisation :
     + add organiization
     vitilab-chambragri
 
-
-
 ## Ajouter la Gateway :
 suivre : https://www.thethingsindustries.com/docs/gateways/models/thethingsindoorgateway/
 
@@ -63,11 +52,8 @@ Attention : le gateway EUI correspond à XXXXXX-FFFE-XXXXXX (les caractéère FF
 Le claim authentification code est celui qui correspond au wifi (derriere apres Wifi PW : )
 Frequency plan : Europe 863-870 MHz (SF9 for RX2  - recommended)
 
-
-
-
 ## Ajouter un Node : 
-choisir l'application vini-meteo (elle doit exister apres avoir rejoind l'organisation vitilab-chambragri).
+choisir l'application vini-meteo (elle doit exister apres avoir rejoins l'organisation vitilab-chambragri).
 Sinon créer une application.
 
 End device
@@ -122,7 +108,7 @@ Le webhook permet la communication entre TTN et protechhebdo
 ## parametrage de configuration.h
 Dans le dossier src, dupliquer le fichier configuration_backup.h et le renommer configuration.h
 
-Renseigner les clé qui doivent correspondre à ce qu'on a sur ttn concernant le end device :
+Renseigner les clés qui doivent correspondre à ce qu'on a sur ttn concernant le end device :
 
     const char* devEui = "70B3D57ED0054974"; // Change to TTN Device EUI
     const char* appEui = "0000000000000000"; // Change to TTN Application EUI
@@ -167,7 +153,7 @@ La réussite du build permet d'être sur que le programme s'execute correctement
 
 ## upload - programmation de l'esp32
 
-Cliquer sur la flêche - upload (barre du bas)
+Cliquer sur la flèche - upload (barre du bas)
 
 # Sur Macos
 Si on a une erreur comme :
@@ -206,7 +192,7 @@ ajouter une ligne du type (à modifier en fonction du nom du port, on peut le tr
 
 ## TEST DE PORTEE
 ### Allumer la gateway et le node
-    tester proche de la gateway avec un smartphone sur https://iot.protechebdo.fr qu'on recoit bien une donnée
+    test proche de la gateway avec un smartphone sur https://iot.protechebdo.fr ou ttn qu'on recoit bien une donnée
 ### S'éloigner et régulierement tester que le lien fonctionne encore
     Appuyer sur le boutton reset de la station
     actualiser la page https://iot.protechebdo.fr (ça peux prendre 1 minute avant de recevoir une donnée à jour)
