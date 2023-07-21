@@ -93,6 +93,7 @@ float tension_min=3.2; //V //tensions valables uniquement pour les batteries lip
 #elif VITI_TYPE == 6
     int pulse = 0; // Variable for saving pulses count.
     float kwh=0;
+    float pluie=0;
     float ratio_kwh = 0.00125; // kwh = pulse*ratio_kwh; car 800imp/kwh soit 1/800 kwh par imp
     const int input = 16;
     unsigned long last_send = 0; //milliseconds
@@ -101,6 +102,7 @@ float tension_min=3.2; //V //tensions valables uniquement pour les batteries lip
 #elif VITI_TYPE == 7
     int pulse = 0; // Variable for saving pulses count.
     float pluie=0;
+    float kwh=0;
     float ratio_pluie = 0.3; // pluie = pulse*ratio_pluie; 0.3 car 0.3mm de pluie par tip de bascule
     const int input = 16; //pin de lecture
     unsigned long last_send = 0; //milliseconds
@@ -452,6 +454,7 @@ void loop()
             // Remise à Zéro du compteur d'impulsion
             pulse = 0;
             kwh=0;
+            pluie=0;
 
             last_send = millis();
         }
