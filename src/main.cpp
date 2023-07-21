@@ -1,8 +1,7 @@
 #include <Arduino.h>
 #include <TTN_esp32.h>
-#include <EEPROM.h>
 #include "TTN_CayenneLPP.h"
-#include "configuration1.h"
+#include "configuration.h"
 
 TTN_esp32 ttn ;
 TTN_CayenneLPP lpp;
