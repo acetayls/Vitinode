@@ -1,8 +1,9 @@
 # Vitinode
 https://github.com/acetayls/Vitinode
 
-Code pour la programmation de station météo et autres capteurs connectés développés par vinipole sud bourgogne (VITILAB), chambre d'agriculture de Sâone et loire
+    Code pour la programmation de station météo et autres capteurs connectés développés par vinipole sud bourgogne (VITILAB), chambre d'agriculture de Sâone et loire
     Voir fiche vitinode pour explications complémentaires
+    voir https://www.thingiverse.com/vitilab/designs pour les modèles 3D
 
 Trajet du signal :
 Station météo (end device) -----LoRA--------> GATEWAY -----Wifi-----> Internet | TheThingsNework | iot.protechebdo.fr
