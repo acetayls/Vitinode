@@ -18,14 +18,14 @@ Installer platformio
 Télecharger le dossier 
     https://github.com/acetayls/Vitinode/archive/refs/heads/main.zip
 ## liste des projets
-// sélection du capteur connecté (uncomment le type en supprimant // et commenter les autres avec // (Ctrl+/) )
-//#define VITI_TYPE 1 // si VINIBOX (température cuve): Sonde DS18B20 --> 1
-//#define VITI_TYPE 2 // si VITINODE (station météo T°/hygro air): sonde DHT22 --> 2
-//#define VITI_TYPE 3 // si VITISOL (hygro du sol): sonde capa --> 3 
-//#define VITI_TYPE 4 // si VITINODEXTEND (station météo T°/hygro air+sol): sonde capa + DS18B20 + DHT22 --> 4 
-//#define VITI_TYPE 5 // si AGRISONAR (niveau d'eau) : sonde HCSR04 --> 5
-//#define VITI_TYPE 6 // si VINIPOWER (compteur d'énergie) : EASTRON SDM530 --> 6
-//#define VITI_TYPE 7 // si VITIPLUIE (pluviomètre): MS-WH-SP-RG --> 7
+    // sélection du capteur connecté (uncomment le type en supprimant // et commenter les autres avec // (Ctrl+/) )
+    //#define VITI_TYPE 1 // si VINIBOX (température cuve): Sonde DS18B20 --> 1
+    //#define VITI_TYPE 2 // si VITINODE (station météo T°/hygro air): sonde DHT22 --> 2
+    //#define VITI_TYPE 3 // si VITISOL (hygro du sol): sonde capa --> 3 
+    //#define VITI_TYPE 4 // si VITINODEXTEND (station météo T°/hygro air+sol): sonde capa + DS18B20 + DHT22 --> 4 
+    //#define VITI_TYPE 5 // si AGRISONAR (niveau d'eau) : sonde HCSR04 --> 5
+    //#define VITI_TYPE 6 // si VINIPOWER (compteur d'énergie) : EASTRON SDM530 --> 6
+    //#define VITI_TYPE 7 // si VITIPLUIE (pluviomètre): MS-WH-SP-RG --> 7
 
 ## Hardware :
 La liste de matériel n'est donnée qu'à titre indicatif et n'est pas une publicité pour un revendeur.
