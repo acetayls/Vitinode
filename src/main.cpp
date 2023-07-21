@@ -235,7 +235,7 @@ void getSensors()
             pulse++;
             pluie = pulse*ratio_pluie;
             Serial.print("pulse :");Serial.println(pulse);
-            delay(500)}
+            delay(500);}
         delay(1); // Delay for stability.
 
     #endif
@@ -302,7 +302,7 @@ void sendData()
         }
     
     #elif VITI_TYPE == 4
-    payloadBuffer[0] =  byte(3);
+    payloadBuffer[0] =  byte(4);
 
     payloadBuffer[1] = int(temp_sonde);
     payloadBuffer[2] = int(int(temp_sonde * 100) % 100);
@@ -330,7 +330,7 @@ void sendData()
         }
 
   #elif VITI_TYPE == 5
-    payloadBuffer[0] =  byte(4);
+    payloadBuffer[0] =  byte(5);
 
     uint32_t d = distance * 100;
     payloadBuffer[1] = int(distance);
@@ -346,7 +346,7 @@ void sendData()
     Serial.print("Remplissage en % : "); Serial.println(niv_pourcent); 
     
   #elif VITI_TYPE == 6
-    payloadBuffer[0] =  byte(5);
+    payloadBuffer[0] =  byte(6);
 
     payloadBuffer[1] = int(kwh);
     payloadBuffer[2] = int(int(kwh * 100) % 100);
@@ -358,7 +358,7 @@ void sendData()
     Serial.print(kwh);Serial.println(" kWh \n");
 
     #elif VITI_TYPE == 7
-    payloadBuffer[0] =  byte(6);
+    payloadBuffer[0] =  byte(7);
 
     payloadBuffer[1] = int(pluie);
     payloadBuffer[2] = int(int(pluie * 100) % 100);
