@@ -31,25 +31,27 @@ Télecharger le dossier
 ## Hardware :
     La liste de matériel n'est donnée qu'à titre indicatif et n'est pas une publicité pour un revendeur.
     COMMUN PROJETS :
-        ESP32 avec LoRA: ttgo - lora v1    https://fr.aliexpress.com/item/32845370112.html?spm=a2g0o.order_list.order_list_main.5.2d1b5e5b6qKGJf&gatewayAdapt=glo2fra
-        2 résistances identiques (e.g. 2 resistances de 3.3 kOhms) (pour lecture niveau de batterie)    https://fr.rs-online.com/web/p/resistances-traversantes/1997822?gb=s
-        câbles jumper    https://www.amazon.fr/MQOUO-120pcs-Femelle-Breadboard-Cables/dp/B0BLYRKWTC/ref=sr_1_13?keywords=wire+jumper&sr=8-13
-        fer à souder avec étain (et pour aller plus loin tout le matériel de bricolage de base (multimètre, pince a denuder, pistolet à colle...))
-        cable micro-usb : Pour la programmation et la charge de la batterie    https://fr.rs-online.com/web/p/cables-usb/1733530
-        batterie lipo   https://fr.aliexpress.com/item/4001138773169.htmlspm=a2g0o.order_list.order_list_main.43.d4eb5e5by97gcL&gatewayAdapt=glo2fra
+        - ESP32 avec LoRA: ttgo - lora v1    https://fr.aliexpress.com/item/32845370112.html?spm=a2g0o.order_list.order_list_main.5.2d1b5e5b6qKGJf&gatewayAdapt=glo2fra
+        - 2 résistances identiques (e.g. 2 resistances de 3.3 kOhms) (pour lecture niveau de batterie)  https://fr.rs-online.com/web/p/resistances-traversantes/1997822?gb=s
+        - câbles jumper    https://www.amazon.fr/MQOUO-120pcs-Femelle-Breadboard-Cables/dp/B0BLYRKWTC/ref=sr_1_13?keywords=wire+jumper&sr=8-13
+        - fer à souder avec étain (et pour aller plus loin tout le matériel de bricolage de base (multimètre, pince a denuder, pistolet à colle...))
+        - cable micro-usb : Pour la programmation et la charge de la batterie    https://fr.rs-online.com/web/p/cables-usb/1733530
+        - batterie lipo   https://fr.aliexpress.com/item/4001138773169.htmlspm=a2g0o.order_list.order_list_main.43.d4eb5e5by97gcL&gatewayAdapt=glo2fra
         (attention température d'utilisation des batteries car les lipo craignent le gel--> https://riton-duino.blogspot.com/2020/12/alimentation-par-batterie-panneaux.html
-        panneau solaire pour tous les projets sur batteries exposés au soleil   https://fr.rs-online.com/web/p/panneaux-solaires/1793740
+        - panneau solaire pour tous les projets sur batteries exposés au soleil   https://fr.rs-online.com/web/p/panneaux-solaires/1793740
         (possible de rajouter régulateur de charge TP4056 en fonction du panneau solaire choisi --> ritonduino/alim batterie+panneaux solaires
         https://fr.aliexpress.com/item/1005004432351925.html?spm=a2g0o.order_list.order_list_main.54.d4eb5e5by97gcL&gatewayAdapt=glo2fra    )
+        
         VITITYPE 1, 3, 5, 7
             boitier étanche    https://fr.aliexpress.com/item/1005001526260365.html?spm=a2g0o.order_list.order_list_main.94.d4eb5e5by97gcL&gatewayAdapt=glo2fra
         VITITYPE 2, 4
             Boitier sur mesure du VITILAB adapté au VITINODE    prendre contact avec VITILAB ou voir dans dossier stl
         VITITYPE 6, 7
             optocoupleur    https://fr.aliexpress.com/item/1005003242672161.html?spm=a2g0o.order_list.order_list_main.23.d4eb5e5by97gcL&gatewayAdapt=glo2fra
+    
     VITITYPE 1 :
-        sonde DS18B20 avec plugable terminal    https://fr.aliexpress.com/item/32839776524.html?gatewayAdapt=glo2fra
-        en option : écran oled    https://www.amazon.fr/IZOKEE-Affichage-Afficheur-Raspberry-Microcontr%C3%B4leur/dp/B076PDVFQD
+        - sonde DS18B20 avec plugable terminal    https://fr.aliexpress.com/item/32839776524.html?gatewayAdapt=glo2fra
+        - en option : écran oled    https://www.amazon.fr/IZOKEE-Affichage-Afficheur-Raspberry-Microcontr%C3%B4leur/dp/B076PDVFQD
     VITITYPE 2 :
         DHT22 : Capteur de température    https://fr.aliexpress.com/item/32753887461.html?spm=a2g0o.order_list.order_list_main.28.d4eb5e5by97gcL&gatewayAdapt=glo2fra
     VITITYPE 3 :
@@ -58,14 +60,14 @@ Télecharger le dossier
         matériels VITITYPE 1, 2 et 3
     VITITYPE 5 :
         si capteur ultrason non étanche HCSR04      https://fr.rs-online.com/web/p/complements-bbc-micro-bit/2153181?gb=b
-        si capteur ultrason étanche DYPA02YY    https://fr.aliexpress.com/item/1005003107797097.html?spm=a2g0o.order_list.order_list_main.59.d4eb5e5by97gcL&gatewayAdapt=glo2fra
+        si capteur ultrason étanche DYPA02YY   https://fr.aliexpress.com/item/1005003107797097.html?spm=a2g0o.order_list.order_list_main.59.d4eb5e5by97gcL&gatewayAdapt=glo2fra
     VITITYPE 6 :
-        boite de dérivation étanche https://elec44.fr/legrand/6588-legrand-plexo-bte-rect-220x170x86-tanche-gris-embout-14-ip55-ik07-750c-rf-092062-3245060920623.html
-        compteur d'énergie eastron SDM530D     https://fr.aliexpress.com/item/32347384739.html?spm=a2g0o.order_list.order_list_main.64.d4eb5e5by97gcL&gatewayAdapt=glo2fra
-        prise mâle triphasé 3P+T+N    https://fr.rs-online.com/web/p/connecteurs-de-puissance-industriels/2144085
-        prise femelle triphasé 3P+T+N    https://fr.rs-online.com/web/p/connecteurs-de-puissance-industriels/2144175
-        Alimentation à découpage Meanwell rs 15 5    https://fr.rs-online.com/web/p/alimentations-a-decoupage/0413673
-        câble triphasé 5 fils 3P+T+N
+        - boite de dérivation étanche https://elec44.fr/legrand/6588-legrand-plexo-bte-rect-220x170x86-tanche-gris-embout-14-ip55-ik07-750c-rf-092062-3245060920623.html
+        - compteur d'énergie eastron SDM530D     https://fr.aliexpress.com/item/32347384739.html?spm=a2g0o.order_list.order_list_main.64.d4eb5e5by97gcL&gatewayAdapt=glo2fra
+        - prise mâle triphasé 3P+T+N    https://fr.rs-online.com/web/p/connecteurs-de-puissance-industriels/2144085
+        - prise femelle triphasé 3P+T+N    https://fr.rs-online.com/web/p/connecteurs-de-puissance-industriels/2144175
+        - Alimentation à découpage Meanwell rs 15 5    https://fr.rs-online.com/web/p/alimentations-a-decoupage/0413673
+        - câble triphasé 5 fils 3P+T+N
     VITITYPE 7 :
         pluviomètre     https://fr.aliexpress.com/item/1000001838878.html?spm=a2g0o.order_list.order_list_main.33.d4eb5e5by97gcL&gatewayAdapt=glo2fra
 ## Cablage 
@@ -215,8 +217,10 @@ Ce fichier doit avoir la forme :
     //#define VITI_TYPE 7 // si VITIPLUIE (pluviomètre): MS-WH-SP-RG --> 7
     #define VITI_TYPE 5
     
-    // Temps entre les mesures (en secondes)
+    // Temps entre les mesures (en secondes) pour VITITYPE 1,2,3,4,5
     const unsigned long secs_between_send = 60*0.25;
+    // Temps entre les mesures (en secondes) pour VITITYPE 6,7
+    const unsigned long time_between_send = 1000*15; // temps entre les envois / mesure  ; en millisecondes
     
     // Coefficient de la batterie (il faut bien prendre 2 résistances identiques pour avoir E/2 en pin 36)
     //avec E la tension délivrée par la batterie, le pont diviseur de tension (pdt) donne  E * R1/(R1+R2)=E *(R1/2R1)=E/2 au pin 36 si les R sont =
@@ -233,8 +237,9 @@ Ce fichier doit avoir la forme :
 ## test de compilation :
 Cliquer sur build (dans VS code, symbole valider dans la barre du bas)
 
-    si besoin, supprimer le fichier : .pio/libdepds/ttgo-lora-v32v1/TTTN_esp32/src/TTN_BLE_ESP32.cpp
-                                      .pio/libdepds/ttgo-lora-v32v1/TTTN_esp32/src/TTN_BLE_ESP32.h
+    si première fois que le programme tourne sur un ordinateur, supprimer les fichiers dans la barre latérale gauche (les slash sont les sous dossiers à ouvrir) : 
+        .pio/libdepds/ttgo-lora-v32v1/TTTN_esp32/src/TTN_BLE_ESP32.cpp
+        .pio/libdepds/ttgo-lora-v32v1/TTTN_esp32/src/TTN_BLE_ESP32.h
 
 La réussite du build permet d'être sur que le programme s'execute correctement
 
